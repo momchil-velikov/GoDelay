@@ -1,4 +1,4 @@
-# GoDelay# delay
+# delay
 --
     import "delay"
 
@@ -7,7 +7,7 @@ provides an alternative to the idiomatic Go way of doing
 
     go func() { time.Sleep(timeout); doStuff() }()
 
-when there's a need to schedule thousands or millions of timeouts.
+when there's a need to schedule *thousands or millions of timeouts*.
 
 ## Usage
 
@@ -15,6 +15,7 @@ when there's a need to schedule thousands or millions of timeouts.
 
 ```go
 type DelayCaller struct {
+    // contains filtered or unexported fields
 }
 ```
 
