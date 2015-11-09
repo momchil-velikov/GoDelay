@@ -43,7 +43,7 @@ func (cl *DelayCaller) runner() {
 				break
 			}
 			cl.queue.popCall()
-			c.Fn()
+			go c.Fn()
 		}
 		// Wait for a new timeout request, but block at most until the next
 		// already scheduled timeout.
