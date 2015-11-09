@@ -11,6 +11,7 @@
 package delay
 
 import (
+	"runtime"
 	"time"
 )
 
@@ -18,11 +19,13 @@ import (
 type DelayCaller struct {
 	queue   callQueue
 	queueIn chan call
+	p       pool
 }
 
 // Create a new delayed call facility instance.
 func New() *DelayCaller {
 	var c DelayCaller
+	c.p.init(runtime.NumCPU())
 	c.queue = nil
 	c.queueIn = make(chan call)
 	go c.runner()
@@ -43,7 +46,7 @@ func (cl *DelayCaller) runner() {
 				break
 			}
 			cl.queue.popCall()
-			go c.Fn()
+			cl.p.send(c.Fn)
 		}
 		// Wait for a new timeout request, but block at most until the next
 		// already scheduled timeout.
@@ -74,4 +77,5 @@ func (cl *DelayCaller) Schedule(d time.Duration, fn func()) {
 // Stop the facility.
 func (cl *DelayCaller) Stop() {
 	close(cl.queueIn)
+	cl.p.stop()
 }
